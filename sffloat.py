@@ -1,6 +1,8 @@
 class sffloat:
 
     def __init__(self, value, sigfigs=None):
+        if sigfigs is not None and sigfigs <= 0:
+            raise ValueError("Invalid value for sigfigs.")
         try:
             if sigfigs:
                 self.sf = sigfigs
@@ -10,6 +12,12 @@ class sffloat:
         except AttributeError:
             self.sf = sigfigs
             self.val = float(value)
+            
+    def __repr__(self):
+        if self.sf is None:
+            return "sffloat({0})".format(self.val)
+        else:
+            return "sffloat({0},{1})".format(self.val, self.sf)
 
     def __float__(self):
         return self.val
@@ -25,7 +33,11 @@ class sffloat:
         Implements multiplication.
         """
         sfother = sffloat(other)
-        return sffloat(float(self) * sffloat(other).val)
+        if sfother.sf is None:
+            newsf = self.sf
+        else:
+            newsf = min(self.sf, sfother.sf)
+        return sffloat(float(self) * sffloat(other).val, newsf)
 
     def __rmul__(self, other):
         """
