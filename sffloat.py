@@ -4,7 +4,11 @@ import math
 def to_precision(x,p):
     """
     returns a string representation of x formatted with a precision of p
-
+    
+    Based on work by Randle Taylor here:
+    http://randlet.com/blog/python-significant-figures-format/
+    
+    Randle credits:
     Based on the webkit javascript implementation taken from here:
     https://code.google.com/p/webkit-mirror/source/browse/JavaScriptCore/kjs/number_object.cpp
     """
@@ -37,7 +41,7 @@ def to_precision(x,p):
         e = e + 1
 
     #m = "%.*g" % (p, n)
-    m = "{0:.{1}g}".format(p, n)
+    m = "{0:{1}g}".format(n, p)
 
     if e < -2 or e >= p:
         out.append(m[0])
@@ -177,4 +181,4 @@ b = sffloat(2.0,3)
 print(a*b)
 print(type(a*b))
 print(b*1)
-print(2*b)
+print(2000001*b)
