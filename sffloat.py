@@ -1,7 +1,8 @@
 import math
+import to_precision
 
 
-def to_precision(x,p):
+def old_to_precision(x,p):
     """
     returns a string representation of x formatted with a precision of p
     
