@@ -36,7 +36,8 @@ def to_precision(x,p):
         n = n / 10.
         e = e + 1
 
-    m = "%.*g" % (p, n)
+    #m = "%.*g" % (p, n)
+    m = "{0:.{1}g}".format(p, n)
 
     if e < -2 or e >= p:
         out.append(m[0])
@@ -56,7 +57,7 @@ def to_precision(x,p):
             out.extend(m[e+1:])
     else:
         out.append("0.")
-        out.extend(["0"]*-(e+1))
+        out.extend(["0"]*(-(e+1)))
         out.append(m)
 
     return "".join(out)
