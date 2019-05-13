@@ -1,9 +1,16 @@
 class sffloat:
 
     def __init__(self, value, sigfigs=None):
-        self.sf = sigfigs
-        self.val = float(value)
-        
+        try:
+            if sigfigs:
+                self.sf = sigfigs
+            else:
+                self.sf = value.sf
+            self.val = value.val
+        except AttributeError:
+            self.sf = sigfigs
+            self.val = float(value)
+
     def __float__(self):
         return self.val
         
@@ -17,7 +24,8 @@ class sffloat:
         """
         Implements multiplication.
         """
-        return sffloat(self.val * sffloat(other).val)
+        sfother = sffloat(other)
+        return sffloat(float(self) * sffloat(other).val)
 
     def __rmul__(self, other):
         """
@@ -85,7 +93,5 @@ a = sffloat(1.0,2)
 b = sffloat(2.0,3)
 print(a*b)
 print(type(a*b))
-print(a.sf)
-print(b.sf)
 print(a*1.0)
 print(1.0*a)
