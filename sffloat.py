@@ -26,7 +26,7 @@ class sffloat:
         if self.sf is None:
             return str(self.val)
         else:
-            return "blah"
+            return "{0e.{1}}".format(str.val, str.sf-1)
 
     def __float__(self):
         return self.val
