@@ -4,6 +4,9 @@ class sffloat:
         self.sf = sigfigs
         self.val = float(value)
         
+    def __float__(self):
+        return self.val
+        
     def __add__(self, other):
         """
         Implements addition.
