@@ -27,13 +27,13 @@ class sffloat:
             
     
     def __repr__(self):
-        if self.sf is None:
+        if self.sf is self.inf:
             return "sffloat({0})".format(self.val)
         else:
             return "sffloat({0},{1})".format(self.val, self.sf)
             
     def __str__(self):
-        if self.sf is None:
+        if self.sf is self.inf:
             return str(self.val)
         else:
             return to_precision.to_precision(self.val, self.sf)
@@ -131,3 +131,4 @@ a = sffloat(1.0)
 b = sffloat(2.0,3)
 c = a*b
 print(c)
+print(a)
