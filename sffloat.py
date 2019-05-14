@@ -2,85 +2,28 @@ import math
 import to_precision
 
 
-def old_to_precision(x,p):
-    """
-    returns a string representation of x formatted with a precision of p
-    
-    Based on work by Randle Taylor here:
-    http://randlet.com/blog/python-significant-figures-format/
-    
-    Randle credits:
-    Based on the webkit javascript implementation taken from here:
-    https://code.google.com/p/webkit-mirror/source/browse/JavaScriptCore/kjs/number_object.cpp
-    """
 
-    x = float(x)
-
-    if x == 0.:
-        return "0." + "0"*(p-1)
-
-    out = []
-
-    if x < 0:
-        out.append("-")
-        x = -x
-
-    e = int(math.log10(x))
-    tens = math.pow(10, e - p + 1)
-    n = math.floor(x/tens)
-
-    if n < math.pow(10, p - 1):
-        e = e -1
-        tens = math.pow(10, e - p+1)
-        n = math.floor(x / tens)
-
-    if abs((n + 1.) * tens - x) <= abs(n * tens -x):
-        n = n + 1
-
-    if n >= math.pow(10,p):
-        n = n / 10.
-        e = e + 1
-
-    #m = "%.*g" % (p, n)
-    m = "{0:{1}g}".format(n, p)
-
-    if e < -2 or e >= p:
-        out.append(m[0])
-        if p > 1:
-            out.append(".")
-            out.extend(m[1:p])
-        out.append('e')
-        if e > 0:
-            out.append("+")
-        out.append(str(e))
-    elif e == (p -1):
-        out.append(m)
-    elif e >= 0:
-        out.append(m[:e+1])
-        if e+1 < len(m):
-            out.append(".")
-            out.extend(m[e+1:])
-    else:
-        out.append("0.")
-        out.extend(["0"]*(-(e+1)))
-        out.append(m)
-
-    return "".join(out)
 
 class sffloat:
+    
+    inf = float('inf')
+
+    def __new__(cls, val, sigfigs=None):
+        if type(val) is cls and sigfigs is None:
+            return val
+        else:
+            return super().__new__(cls)
 
     def __init__(self, value, sigfigs=None):
-        if sigfigs is not None and sigfigs <= 0:
+        if sigfigs is not None and sigfigs <= 0 and sigfigs is not float('inf'):
             raise ValueError("Invalid value for sigfigs.")
-        try:
-            if sigfigs:
-                self.sf = sigfigs
-            else:
-                self.sf = value.sf
-            self.val = value.val
-        except AttributeError:
+        elif sigfigs is None and self is value:
+            return  # just passthru
+        if sigfigs is not None:
             self.sf = sigfigs
-            self.val = float(value)
+        else:
+            self.sf = self.inf
+        self.val = float(value)
             
     
     def __repr__(self):
@@ -93,7 +36,7 @@ class sffloat:
         if self.sf is None:
             return str(self.val)
         else:
-            return to_precision(self.val, self.sf)
+            return to_precision.to_precision(self.val, self.sf)
 
     def __float__(self):
         return self.val
@@ -109,12 +52,9 @@ class sffloat:
         Implements multiplication.
         """
         sfother = sffloat(other)
-        if sfother.sf is None:
-            newsf = self.sf
-        else:
-            newsf = min(self.sf, sfother.sf)
-        return sffloat(float(self) * sffloat(other).val, newsf)
-
+        newsf = self.inf
+        return sffloat(self.val*sfother.val, min(self.sf, sfother.sf))
+    
     def __rmul__(self, other):
         """
         Implements reflected multiplication.
@@ -179,7 +119,15 @@ class sffloat:
 
 a = sffloat(1.0,2)
 b = sffloat(2.0,3)
+c = sffloat(b,4)
+print(c is b)
 print(a*b)
 print(type(a*b))
 print(b*1)
 print(2000001*b)
+print(c)
+print(float('inf') is float('inf'))
+a = sffloat(1.0)
+b = sffloat(2.0,3)
+c = a*b
+print(c)
