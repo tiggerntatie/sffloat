@@ -131,4 +131,5 @@ a = sffloat(1.0)
 b = sffloat(2.0,3)
 c = a*b
 print(c)
-print(a)
+print(repr(a))
+print(repr(c))
