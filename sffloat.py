@@ -61,12 +61,12 @@ class sffloat:
         return self._msd() - (self._sf - 1)
 
     @classmethod
-    def _multiplicative_func(cls, f, a, b, rev=False):
+    def _multiplicative_func(cls, f, a, b, ref=False):
         """
         Perform method f on its object a, and other b.
         """
         sfother = cls(b)
-        if rev:
+        if ref:
             return cls(f(sfother._val, a._val), min(a._sf, sfother._sf))
         else:
             return cls(f(a._val, sfother._val), min(a._sf, sfother._sf))
@@ -120,7 +120,7 @@ class sffloat:
         """
         Implements reflected subtraction.
         """
-        return self._additive_func(float.__sub__, self, other, rev=True)
+        return self._additive_func(float.__sub__, self, other, ref=True)
         
     def __mul__(self, other):
         """
@@ -132,7 +132,7 @@ class sffloat:
         """
         Implements reflected multiplication.
         """
-        return self._multiplicative_func(float.__mul__, self, other, rev=True)
+        return self._multiplicative_func(float.__mul__, self, other, ref=True)
 
     def __floordiv__(self, other):
         """
@@ -140,10 +140,14 @@ class sffloat:
         """
         return self._multiplicative_func(float.__floordiv__, self, other)
 
+    def __rfloordiv__(self, other):
+        """
+        Implements reflected integer division using the // operator.
+        """
+        return self._multiplicative_func(float.__floordiv__, self, other, ref=True)
+
     
     """
-    __floordiv__(self, other)
-    Implements integer division using the // operator.
     __div__(self, other)
     Implements division using the / operator.
     __truediv__(self, other)
@@ -166,8 +170,6 @@ class sffloat:
     Implements bitwise xor using the ^ operator.
     
     
-    __rfloordiv__(self, other)
-    Implements reflected integer division using the // operator.
     __rdiv__(self, other)
     Implements reflected division using the / operator.
     __rtruediv__(self, other)
