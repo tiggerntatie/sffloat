@@ -8,29 +8,6 @@ class sffloat:
     
     inf = float('inf')
 
-    @classmethod
-    def _sffloat_from_lsd(cls, value, lsd):
-        """
-        Return a new sffloat instance for a given value and lsd place
-        """
-        return cls(value, self._msd(value) - lsd + 1)
-    
-    @staticmethod    
-    def _msd(val):
-        """
-        Return the position of the most significant digit.
-        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
-        """
-        return floor(log10(val))
-
-    @staticmethod    
-    def _lsd(val, sigfigs):
-        """
-        Return the position of the least significant digit.
-        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
-        """
-        return self._msd(val) - (sigfigs - 1)
-
     def __new__(cls, val, sigfigs=None):
         if type(val) is cls and sigfigs is None:
             return val
@@ -48,6 +25,43 @@ class sffloat:
             self._sf = self.inf
         self._val = float(value)
         
+    @classmethod
+    def _sffloat_from_lsd(cls, value, lsd):
+        """
+        Return a new sffloat instance for a given value and lsd place
+        """
+        return cls(value, self._msd(value) - lsd + 1)
+    
+    @staticmethod    
+    def _msd_from_val(val):
+        """
+        Return the position of the most significant digit.
+        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
+        """
+        return floor(log10(val))
+
+    @staticmethod    
+    def _lsd_from_val_sf(val, sigfigs):
+        """
+        Return the position of the least significant digit.
+        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
+        """
+        return self._msd(val) - (sigfigs - 1)
+
+    def _msd(self):
+        """
+        Return the position of the most significant digit.
+        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
+        """
+        return floor(log10(self.val))
+        
+    def _lsd(self):
+        """
+        Return the position of the least significant digit.
+        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
+        """
+        return self._msd() - (self._sf - 1)
+
     def __repr__(self):
         if self._sf is self.inf:
             return "sffloat({0})".format(self._val)
@@ -67,8 +81,16 @@ class sffloat:
         """
         Implements addition.
         """
-        return sffloat(self._val + sffloat(other)._val)
+        sfother = type(self)(other)
+        lsd = max(self._lsd(), sfother._lsd())
+        return _sffloat_from_lsd(self._val + sfother._val, lsd)
 
+    def __radd__(self, other):
+        """
+        Implements reflected addition.
+        """
+        return self + other
+        
     def __mul__(self, other):
         """
         Implements multiplication.
@@ -110,8 +132,6 @@ class sffloat:
     Implements bitwise xor using the ^ operator.
     
     
-    __radd__(self, other)
-    Implements reflected addition.
     __rsub__(self, other)
     Implements reflected subtraction.
     __rfloordiv__(self, other)
