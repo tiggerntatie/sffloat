@@ -30,7 +30,7 @@ class sffloat:
         """
         Return a new sffloat instance for a given value and lsd place
         """
-        return cls(value, self._msd(value) - lsd + 1)
+        return cls(value, cls._msd_from_val(value) - lsd + 1)
     
     @staticmethod    
     def _msd_from_val(val):
@@ -40,13 +40,13 @@ class sffloat:
         """
         return floor(log10(val))
 
-    @staticmethod    
-    def _lsd_from_val_sf(val, sigfigs):
+    @classmethod    
+    def _lsd_from_val_sf(cls, val, sigfigs):
         """
         Return the position of the least significant digit.
         0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
         """
-        return self._msd(val) - (sigfigs - 1)
+        return cls._msd_from_val(val) - (sigfigs - 1)
 
     def _msd(self):
         """
