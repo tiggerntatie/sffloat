@@ -117,7 +117,7 @@ class sffloat:
         """
         Implements reflected subtraction.
         """
-        return self._additive_func(float.__sub__, self, other, rev=True)
+        return self._additive_func(float.__sub__, self, other, True)
         
     def __mul__(self, other):
         """
@@ -129,7 +129,7 @@ class sffloat:
         """
         Implements reflected multiplication.
         """
-        return self._multiplicative_func(float.__mul__, self, other, rev=True)
+        return self._multiplicative_func(float.__mul__, self, other, True)
     
     """
     __floordiv__(self, other)
