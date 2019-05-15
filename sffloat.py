@@ -1,4 +1,4 @@
-from math import log10
+from math import log10, floor
 import to_precision
 
 
@@ -161,17 +161,9 @@ class sffloat:
 
 a = sffloat(1.0,2)
 b = sffloat(2.0,3)
-c = sffloat(b,4)
-print(c is b)
-print(a*b)
-print(type(a*b))
-print(b*1)
-print(2000001*b)
-print(c)
-print(float('inf') is float('inf'))
-a = sffloat(1.0)
-b = sffloat(2.0,3)
-c = a*b
-print(c)
-print(repr(a))
-print(repr(c))
+print(a+b)
+print(a+0.1)
+print(a+0.01)
+print(a+0.001)
+print(0.1+a)
+print(0.001+a)
