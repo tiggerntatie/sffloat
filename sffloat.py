@@ -1,4 +1,4 @@
-import math
+from math import log10
 import to_precision
 
 
@@ -24,7 +24,20 @@ class sffloat:
         else:
             self.sf = self.inf
         self.val = float(value)
-            
+        
+    def _msd(self):
+        """
+        Return the position of the most significant digit.
+        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
+        """
+        return floor(log10(self.val))
+        
+    def _lsd(self):
+        """
+        Return the position of the least significant digit.
+        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
+        """
+        return self._msd - (self.sf - 1)
     
     def __repr__(self):
         if self.sf is self.inf:
