@@ -223,4 +223,6 @@ c = sffloat(0,3)
 print(9-a)
 print(a-9)
 print(c)
+print(a/b)
+
 
