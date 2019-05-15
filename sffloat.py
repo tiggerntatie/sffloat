@@ -73,7 +73,7 @@ class sffloat:
         """
         Perform method f on its object a, and other b.
         """
-        sfother = cls(other)
+        sfother = cls(b)
         lsd = max(a._lsd(), sfother._lsd())
         return cls._sffloat_from_lsd(f(a._val, sfother._val), lsd)
 
