@@ -133,6 +133,13 @@ class sffloat:
         Implements reflected multiplication.
         """
         return self._multiplicative_func(float.__mul__, self, other, rev=True)
+
+    def __floordiv__(self, other):
+        """
+        Implements integer division using the // operator.
+        """
+        return self._multiplicative_func(float.__floordiv__, self, other)
+
     
     """
     __floordiv__(self, other)
@@ -186,6 +193,8 @@ class sffloat:
 
 a = sffloat(1.0,4)
 b = sffloat(2.0,9)
+c = sffloat(0,3)
 print(9-a)
 print(a-9)
+print(c)
 
