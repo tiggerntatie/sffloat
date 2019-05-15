@@ -53,7 +53,7 @@ class sffloat:
         Return the position of the most significant digit.
         0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
         """
-        return floor(log10(self.val))
+        return floor(log10(self._val))
         
     def _lsd(self):
         """
