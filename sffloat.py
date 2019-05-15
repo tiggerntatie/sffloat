@@ -83,7 +83,7 @@ class sffloat:
         """
         sfother = type(self)(other)
         lsd = max(self._lsd(), sfother._lsd())
-        return _sffloat_from_lsd(self._val + sfother._val, lsd)
+        return self._sffloat_from_lsd(self._val + sfother._val, lsd)
 
     def __radd__(self, other):
         """
@@ -95,9 +95,9 @@ class sffloat:
         """
         Implements multiplication.
         """
-        sfother = sffloat(other)
+        sfother = type(self)(other)
         newsf = self.inf
-        return self.sffloat(self._val*sfother._val, min(self._sf, sfother._sf))
+        return type(self)(self._val*sfother._val, min(self._sf, sfother._sf))
     
     def __rmul__(self, other):
         """
