@@ -8,6 +8,29 @@ class sffloat:
     
     inf = float('inf')
 
+    @classmethod
+    def _sffloat_from_lsd(cls, value, lsd):
+        """
+        Return a new sffloat instance for a given value and lsd place
+        """
+        return cls(value, self._msd(value) - lsd + 1)
+    
+    @staticmethod    
+    def _msd(val):
+        """
+        Return the position of the most significant digit.
+        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
+        """
+        return floor(log10(val))
+
+    @staticmethod    
+    def _lsd(val, sigfigs):
+        """
+        Return the position of the least significant digit.
+        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
+        """
+        return self._msd(val) - (sigfigs - 1)
+
     def __new__(cls, val, sigfigs=None):
         if type(val) is cls and sigfigs is None:
             return val
@@ -20,45 +43,31 @@ class sffloat:
         elif sigfigs is None and self is value:
             return  # just passthru
         if sigfigs is not None:
-            self.sf = sigfigs
+            self._sf = sigfigs
         else:
-            self.sf = self.inf
-        self.val = float(value)
+            self._sf = self.inf
+        self._val = float(value)
         
-    def _msd(self):
-        """
-        Return the position of the most significant digit.
-        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
-        """
-        return floor(log10(self.val))
-        
-    def _lsd(self):
-        """
-        Return the position of the least significant digit.
-        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
-        """
-        return self._msd - (self.sf - 1)
-    
     def __repr__(self):
-        if self.sf is self.inf:
-            return "sffloat({0})".format(self.val)
+        if self._sf is self.inf:
+            return "sffloat({0})".format(self._val)
         else:
-            return "sffloat({0},{1})".format(self.val, self.sf)
+            return "sffloat({0},{1})".format(self._val, self._sf)
             
     def __str__(self):
-        if self.sf is self.inf:
-            return str(self.val)
+        if self._sf is self.inf:
+            return str(self._val)
         else:
-            return to_precision.to_precision(self.val, self.sf)
+            return to_precision.to_precision(self._val, self._sf)
 
     def __float__(self):
-        return self.val
+        return self._val
         
     def __add__(self, other):
         """
         Implements addition.
         """
-        return sffloat(self.val + sffloat(other).val)
+        return sffloat(self._val + sffloat(other)._val)
 
     def __mul__(self, other):
         """
@@ -66,7 +75,7 @@ class sffloat:
         """
         sfother = sffloat(other)
         newsf = self.inf
-        return sffloat(self.val*sfother.val, min(self.sf, sfother.sf))
+        return sffloat(self._val*sfother._val, min(self._sf, sfother._sf))
     
     def __rmul__(self, other):
         """
