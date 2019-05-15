@@ -28,10 +28,8 @@ class sffloat:
         """
         Return a new sffloat instance for a given value and lsd place
         """
-        temp = cls(value, cls._msd_from_val(value) - lsd + 1)
-        print("_sffloat_from_lsd:", value, lsd, "-->", temp)
-        return temp
-    
+        return cls(value, cls._msd_from_val(value) - lsd + 1)
+
     @staticmethod    
     def _msd_from_val(val):
         """
@@ -83,9 +81,7 @@ class sffloat:
         if rev:
             return cls._sffloat_from_lsd(f(sfother._val, a._val), lsd)
         else:
-            print("reversing", a._val, sfother._val, lsd)
-            temp = cls._sffloat_from_lsd(f(a._val, sfother._val), lsd)
-            print("result: ", temp._val, temp._sf)
+            return cls._sffloat_from_lsd(f(a._val, sfother._val), lsd)
 
     def __repr__(self):
         if self._sf is self.inf:
