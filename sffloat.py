@@ -68,6 +68,16 @@ class sffloat:
         sfother = cls(b)
         return cls(f(a._val, sfother._val), min(a._sf, sfother._sf))
 
+    @classmethod
+    def _additive_func(cls, f, a, b):
+        """
+        Perform method f on its object a, and other b.
+        """
+        sfother = cls(other)
+        lsd = max(a._lsd(), sfother._lsd())
+        return cls._sffloat_from_lsd(f(a._val, sfother._val), lsd)
+
+
     def __repr__(self):
         if self._sf is self.inf:
             return "sffloat({0})".format(self._val)
@@ -87,9 +97,10 @@ class sffloat:
         """
         Implements addition.
         """
-        sfother = type(self)(other)
-        lsd = max(self._lsd(), sfother._lsd())
-        return self._sffloat_from_lsd(self._val + sfother._val, lsd)
+        return self._additive_func(float.__add__, self, other)
+        #sfother = type(self)(other)
+        #lsd = max(self._lsd(), sfother._lsd())
+        #return self._sffloat_from_lsd(self._val + sfother._val, lsd)
 
     def __radd__(self, other):
         """
@@ -110,9 +121,7 @@ class sffloat:
         Implements multiplication.
         """
         return self._multiplicative_func(float.__mul__, self, other)
-        #sfother = type(self)(other)
-        #return type(self)(self._val*sfother._val, min(self._sf, sfother._sf))
-    
+
     def __rmul__(self, other):
         """
         Implements reflected multiplication.
