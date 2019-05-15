@@ -1,4 +1,4 @@
-from math import log10, floor
+from math import log10, floor, abs
 import to_precision
 
 
@@ -28,7 +28,9 @@ class sffloat:
         """
         Return a new sffloat instance for a given value and lsd place
         """
-        return cls(value, cls._msd_from_val(value) - lsd + 1)
+        temp = cls(value, cls._msd_from_val(value) - lsd + 1)
+        print("_sffloat_from_lsd:", value, lsd, "-->", temp)
+        return temp
     
     @staticmethod    
     def _msd_from_val(val):
@@ -36,7 +38,7 @@ class sffloat:
         Return the position of the most significant digit.
         0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
         """
-        return floor(log10(val))
+        return floor(log10(abs(val)))
 
     @classmethod    
     def _lsd_from_val_sf(cls, val, sigfigs):
@@ -51,7 +53,7 @@ class sffloat:
         Return the position of the most significant digit.
         0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
         """
-        return floor(log10(self._val))
+        return floor(log10(abs(self._val)))
         
     def _lsd(self):
         """
@@ -81,7 +83,9 @@ class sffloat:
         if rev:
             return cls._sffloat_from_lsd(f(sfother._val, a._val), lsd)
         else:
-            return cls._sffloat_from_lsd(f(a._val, sfother._val), lsd)
+            print("reversing", a._val, sfother._val, lsd)
+            temp = cls._sffloat_from_lsd(f(a._val, sfother._val), lsd)
+            print("result: ", temp._val, temp._sf)
 
     def __repr__(self):
         if self._sf is self.inf:
@@ -186,15 +190,6 @@ class sffloat:
 
 a = sffloat(1.0,4)
 b = sffloat(2.0,9)
-print(a+b)
-print(a+0.1)
-print(a+0.01)
-print(a+0.001)
-print(0.1+a)
-print(0.001+a)
-print(0.001*(a+b))
-print((a+b)*0.001)
-print(a-b)
-print(b-a)
-print(a-1.0)
-print(1.0-a)
+print(9-a)
+print(a-9)
+
