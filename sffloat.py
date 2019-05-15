@@ -168,19 +168,19 @@ class sffloat:
         """
         Implements reflected true division. Note that this only works when from __future__ import division is in effect.
         """
-        return self.multiplicative_func(float.__rtruediv__, self, other, ref=True)
+        return self._multiplicative_func(float.__rtruediv__, self, other, ref=True)
 
     def __pow__(self, other):
         """
         Implements behavior for exponents using the ** operator.
         """
-        return self.multiplicative_func(float.__pow__, self, other)
+        return self._multiplicative_func(float.__pow__, self, other)
 
     def __rpow__(self, other):
         """
         Implements behavior for reflected exponents using the ** operator.
         """
-        return self.multiplicative_func(float.__pow__, self, other, True)
+        return self._multiplicative_func(float.__pow__, self, other, True)
 
     
     """
