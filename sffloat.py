@@ -97,7 +97,7 @@ class sffloat:
         """
         sfother = sffloat(other)
         newsf = self.inf
-        return sffloat(self._val*sfother._val, min(self._sf, sfother._sf))
+        return self.sffloat(self._val*sfother._val, min(self._sf, sfother._sf))
     
     def __rmul__(self, other):
         """
