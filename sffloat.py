@@ -72,13 +72,13 @@ class sffloat:
             return cls(f(a._val, sfother._val), min(a._sf, sfother._sf))
 
     @classmethod
-    def _additive_func(cls, f, a, b, rev=False):
+    def _additive_func(cls, f, a, b, ref=False):
         """
         Perform method f on its object a, and other b.
         """
         sfother = cls(b)
         lsd = max(a._lsd(), sfother._lsd())
-        if rev:
+        if ref:
             return cls._sffloat_from_lsd(f(sfother._val, a._val), lsd)
         else:
             return cls._sffloat_from_lsd(f(a._val, sfother._val), lsd)
