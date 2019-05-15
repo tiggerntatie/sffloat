@@ -146,18 +146,48 @@ class sffloat:
         """
         return self._multiplicative_func(float.__floordiv__, self, other, ref=True)
 
+    def __div__(self, other):
+        """
+        Implements division using the / operator.
+        """
+        return self._multiplicative_func(float.__div__, self, other)
+
+    def __rdiv__(self, other):
+        """
+        Implements reflected division using the / operator.
+        """
+        return self._multiplicative_func(float.__rdiv__, self, other)
+
+    def __truediv__(self, other):
+        """
+        Implements true division. Note that this only works when from __future__ import division is in effect.
+        """
+        return self._multiplicative_func(float.__truediv__, self, other)
+    
+    def __rtruediv__(self, other):
+        """
+        Implements reflected true division. Note that this only works when from __future__ import division is in effect.
+        """
+        return self.multiplicative_func(float.__rtruediv__, self, other, ref=True)
+
+    def __pow__(self, other):
+        """
+        Implements behavior for exponents using the ** operator.
+        """
+        return self.multiplicative_func(float.__pow__, self, other)
+
+    def __rpow__(self, other):
+        """
+        Implements behavior for reflected exponents using the ** operator.
+        """
+        return self.multiplicative_func(float.__pow__, self, other, True)
+
     
     """
-    __div__(self, other)
-    Implements division using the / operator.
-    __truediv__(self, other)
-    Implements true division. Note that this only works when from __future__ import division is in effect.
     __mod__(self, other)
     Implements modulo using the % operator.
     __divmod__(self, other)
     Implements behavior for long division using the divmod() built in function.
-    __pow__
-    Implements behavior for exponents using the ** operator.
     __lshift__(self, other)
     Implements left bitwise shift using the << operator.
     __rshift__(self, other)
@@ -170,16 +200,10 @@ class sffloat:
     Implements bitwise xor using the ^ operator.
     
     
-    __rdiv__(self, other)
-    Implements reflected division using the / operator.
-    __rtruediv__(self, other)
-    Implements reflected true division. Note that this only works when from __future__ import division is in effect.
     __rmod__(self, other)
     Implements reflected modulo using the % operator.
     __rdivmod__(self, other)
     Implements behavior for long division using the divmod() built in function, when divmod(other, self) is called.
-    __rpow__
-    Implements behavior for reflected exponents using the ** operator.
     __rlshift__(self, other)
     Implements reflected left bitwise shift using the << operator.
     __rrshift__(self, other)
