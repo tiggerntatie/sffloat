@@ -219,10 +219,10 @@ class sffloat:
 
 a = sffloat(1.0,4)
 b = sffloat(2.0,9)
-c = sffloat(0,3)
+c = sffloat(3,3)
 print(9-a)
 print(a-9)
 print(c)
 print(a/b)
-
+print(b**c)
 
