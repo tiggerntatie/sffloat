@@ -67,8 +67,6 @@ class sffloat:
         """
         sfother = cls(b)
         return cls(f(a._val, sfother._val), min(a._sf, sfother._sf))
-        
-        
 
     def __repr__(self):
         if self._sf is self.inf:
@@ -111,7 +109,7 @@ class sffloat:
         """
         Implements multiplication.
         """
-        self._multiplicative_func(float.__mul__, self, other)
+        return self._multiplicative_func(float.__mul__, self, other)
         #sfother = type(self)(other)
         #return type(self)(self._val*sfother._val, min(self._sf, sfother._sf))
     
