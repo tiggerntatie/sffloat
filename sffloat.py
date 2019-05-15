@@ -61,12 +61,15 @@ class sffloat:
         return self._msd() - (self._sf - 1)
 
     @classmethod
-    def _multiplicative_func(cls, f, a, b):
+    def _multiplicative_func(cls, f, a, b, rev=False):
         """
         Perform method f on its object a, and other b.
         """
         sfother = cls(b)
-        return cls(f(a._val, sfother._val), min(a._sf, sfother._sf))
+        if rev:
+            return cls(f(sfother._val, a._val), min(a._sf, sfother._sf))
+        else:
+            return cls(f(a._val, sfother._val), min(a._sf, sfother._sf))
 
     @classmethod
     def _additive_func(cls, f, a, b, rev=False):
@@ -117,7 +120,7 @@ class sffloat:
         """
         Implements reflected subtraction.
         """
-        return self._additive_func(float.__sub__, self, other, True)
+        return self._additive_func(float.__sub__, self, other, rev=True)
         
     def __mul__(self, other):
         """
@@ -129,7 +132,7 @@ class sffloat:
         """
         Implements reflected multiplication.
         """
-        return self._multiplicative_func(float.__mul__, self, other, True)
+        return self._multiplicative_func(float.__mul__, self, other, rev=True)
     
     """
     __floordiv__(self, other)
