@@ -2,8 +2,6 @@ from math import log10, floor
 import to_precision
 
 
-
-
 class sffloat:
     
     inf = float('inf')
@@ -62,6 +60,16 @@ class sffloat:
         """
         return self._msd() - (self._sf - 1)
 
+    @classmethod
+    def _multiplicative_func(cls, f, a, b):
+        """
+        Perform method f on its object a, and other b.
+        """
+        sfother = cls(b)
+        return cls(f(a._val, sfother._val), min(a._sf, sfother._sf))
+        
+        
+
     def __repr__(self):
         if self._sf is self.inf:
             return "sffloat({0})".format(self._val)
@@ -90,14 +98,22 @@ class sffloat:
         Implements reflected addition.
         """
         return self + other
+
+    def __sub__(self, other):
+        """
+        Implements subtraction.
+        """
+        sfother = type(self)(other)
+        lsd = max(self._lsd(), sfother._lsd())
+        return self.sffloat_from_lsd(self._val - sfother._val, lsd)
         
     def __mul__(self, other):
         """
         Implements multiplication.
         """
-        sfother = type(self)(other)
-        newsf = self.inf
-        return type(self)(self._val*sfother._val, min(self._sf, sfother._sf))
+        self._multiplicative_func(float.__mul__, self, other)
+        #sfother = type(self)(other)
+        #return type(self)(self._val*sfother._val, min(self._sf, sfother._sf))
     
     def __rmul__(self, other):
         """
@@ -106,8 +122,6 @@ class sffloat:
         return self * other
     
     """
-    __sub__(self, other)
-    Implements subtraction.
     __floordiv__(self, other)
     Implements integer division using the // operator.
     __div__(self, other)
@@ -159,11 +173,13 @@ class sffloat:
     """
         
 
-a = sffloat(1.0,2)
-b = sffloat(2.0,3)
+a = sffloat(1.0,4)
+b = sffloat(2.0,9)
 print(a+b)
 print(a+0.1)
 print(a+0.01)
 print(a+0.001)
 print(0.1+a)
 print(0.001+a)
+print(0.001*(a+b))
+print((a+b)*0.001)
