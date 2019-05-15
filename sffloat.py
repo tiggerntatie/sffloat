@@ -69,14 +69,16 @@ class sffloat:
         return cls(f(a._val, sfother._val), min(a._sf, sfother._sf))
 
     @classmethod
-    def _additive_func(cls, f, a, b):
+    def _additive_func(cls, f, a, b, rev=False):
         """
         Perform method f on its object a, and other b.
         """
         sfother = cls(b)
         lsd = max(a._lsd(), sfother._lsd())
-        return cls._sffloat_from_lsd(f(a._val, sfother._val), lsd)
-
+        if rev:
+            return cls._sffloat_from_lsd(f(sfother._val, a._val), lsd)
+        else:
+            return cls._sffloat_from_lsd(f(a._val, sfother._val), lsd)
 
     def __repr__(self):
         if self._sf is self.inf:
@@ -98,9 +100,6 @@ class sffloat:
         Implements addition.
         """
         return self._additive_func(float.__add__, self, other)
-        #sfother = type(self)(other)
-        #lsd = max(self._lsd(), sfother._lsd())
-        #return self._sffloat_from_lsd(self._val + sfother._val, lsd)
 
     def __radd__(self, other):
         """
@@ -112,9 +111,13 @@ class sffloat:
         """
         Implements subtraction.
         """
-        sfother = type(self)(other)
-        lsd = max(self._lsd(), sfother._lsd())
-        return self.sffloat_from_lsd(self._val - sfother._val, lsd)
+        return self._additive_func(float.__sub__, self, other)
+
+    def __rsub__(self, other):
+        """
+        Implements reflected subtraction.
+        """
+        return self._additive_func(float.__sub__, self, other, rev=True)
         
     def __mul__(self, other):
         """
@@ -126,7 +129,7 @@ class sffloat:
         """
         Implements reflected multiplication.
         """
-        return self * other
+        return self._multiplicative_func(float.__mul__, self, other, rev=True)
     
     """
     __floordiv__(self, other)
@@ -153,8 +156,6 @@ class sffloat:
     Implements bitwise xor using the ^ operator.
     
     
-    __rsub__(self, other)
-    Implements reflected subtraction.
     __rfloordiv__(self, other)
     Implements reflected integer division using the // operator.
     __rdiv__(self, other)
