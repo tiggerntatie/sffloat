@@ -29,6 +29,17 @@ class sffloat:
         """
         return sffloat(self._value, self._sf)
     
+    def equivalent_to_float(self, other):
+        """
+        Return True if other float value is 
+        equivalent to self, when taking significant figures
+        into account.
+        
+        Ex. sffloat(3.1415926, 3).equivalent_to(3.142) --> True
+        """
+        sfother = sffloat(other, self._sf)
+        return str(self) == str(sfother)
+    
     @classmethod
     def _sffloat_from_lsd(cls, value, lsd):
         """
