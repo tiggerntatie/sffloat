@@ -2,7 +2,7 @@ import math
 import to_precision
 
 
-class sffloat:
+class sffloat(float):
     
     inf = float('inf')
 
