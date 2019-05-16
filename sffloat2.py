@@ -21,7 +21,7 @@ class sffloat(float):
             self._sf = sigfigs
         else:
             self._sf = self.inf
-        self._val = float(value)
+        #self._val = float(value)
         
     def copy(self):
         """
