@@ -4,8 +4,6 @@ import to_precision
 
 class sffloat(float):
     
-    inf = float('inf')
-
     def __new__(cls, val, sigfigs=None):
         if type(val) is cls and sigfigs is None:
             return val
@@ -13,7 +11,7 @@ class sffloat(float):
             return super().__new__(cls, val)
 
     def __init__(self, value, sigfigs=None):
-        if sigfigs is not None and sigfigs <= 0 and sigfigs is not float('inf'):
+        if sigfigs is not None and sigfigs <= 0 and sigfigs is not super()('inf'):
             raise ValueError("Invalid value for sigfigs.")
         elif sigfigs is None and self is value:
             return  # just passthru
@@ -120,7 +118,7 @@ class sffloat(float):
         """
         Implements addition.
         """
-        return self._additive_func(float.__add__, self, other)
+        return self._additive_func(super().__add__, self, other)
 
     def __radd__(self, other):
         """
@@ -132,73 +130,73 @@ class sffloat(float):
         """
         Implements subtraction.
         """
-        return self._additive_func(float.__sub__, self, other)
+        return self._additive_func(super().__sub__, self, other)
 
     def __rsub__(self, other):
         """
         Implements reflected subtraction.
         """
-        return self._additive_func(float.__sub__, self, other, ref=True)
+        return self._additive_func(super().__sub__, self, other, ref=True)
         
     def __mul__(self, other):
         """
         Implements multiplication.
         """
-        return self._multiplicative_func(float.__mul__, self, other)
+        return self._multiplicative_func(super().__mul__, self, other)
 
     def __rmul__(self, other):
         """
         Implements reflected multiplication.
         """
-        return self._multiplicative_func(float.__mul__, self, other, ref=True)
+        return self._multiplicative_func(super().__mul__, self, other, ref=True)
 
     def __floordiv__(self, other):
         """
         Implements integer division using the // operator.
         """
-        return self._multiplicative_func(float.__floordiv__, self, other)
+        return self._multiplicative_func(super().__floordiv__, self, other)
 
     def __rfloordiv__(self, other):
         """
         Implements reflected integer division using the // operator.
         """
-        return self._multiplicative_func(float.__floordiv__, self, other, ref=True)
+        return self._multiplicative_func(super().__floordiv__, self, other, ref=True)
 
     def __div__(self, other):
         """
         Implements division using the / operator.
         """
-        return self._multiplicative_func(float.__div__, self, other)
+        return self._multiplicative_func(super().__div__, self, other)
 
     def __rdiv__(self, other):
         """
         Implements reflected division using the / operator.
         """
-        return self._multiplicative_func(float.__rdiv__, self, other)
+        return self._multiplicative_func(super().__rdiv__, self, other)
 
     def __truediv__(self, other):
         """
         Implements true division. Note that this only works when from __future__ import division is in effect.
         """
-        return self._multiplicative_func(float.__truediv__, self, other)
+        return self._multiplicative_func(super().__truediv__, self, other)
     
     def __rtruediv__(self, other):
         """
         Implements reflected true division. Note that this only works when from __future__ import division is in effect.
         """
-        return self._multiplicative_func(float.__rtruediv__, self, other, ref=True)
+        return self._multiplicative_func(super().__rtruediv__, self, other, ref=True)
 
     def __pow__(self, other):
         """
         Implements behavior for exponents using the ** operator.
         """
-        return self._multiplicative_func(float.__pow__, self, other)
+        return self._multiplicative_func(super().__pow__, self, other)
 
     def __rpow__(self, other):
         """
         Implements behavior for reflected exponents using the ** operator.
         """
-        return self._multiplicative_func(float.__pow__, self, other, True)
+        return self._multiplicative_func(super().__pow__, self, other, True)
 
     def __eq__(self, other):
         """
