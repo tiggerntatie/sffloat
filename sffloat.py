@@ -280,14 +280,19 @@ class sffloat:
         
 # Wrappers for mathematics functions
 
-def sin(x):
+def _funcwrapper(f, x):
     """
-    Wrapper for math.sin that supports sffloat arguments
+    Generic wrapper for functions that support sffloat arguments
     """
     try:
-        return sffloat(sin(x), x._sf)
+        return sffloat(f(x), x._sf)
     except:
-        return sin(x)
+        return f(x)
+    
+
+def sin(x):
+    print("here we go")
+    return _funcwrapper(sin, x)
     
     
 
@@ -311,6 +316,6 @@ print(a.equivalent_to_float(1.0010))
 print(a.equivalent_to_float(0.99999))
 print(sffloat(0.9999, 4))
 print(sffloat(0.99999, 4))
-
+print(sin(sffloat(3.1415925,2)))
 
 
