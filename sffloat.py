@@ -303,28 +303,28 @@ sqrt = lambda x: _funcwrapper(math.sqrt, x)
 degrees = lambda x: _funcwrapper(math.degrees, x)
 radians = lambda x: _funcwrapper(math.radians, x)
 
-
-a = sffloat(1.0,4)
-b = sffloat(2.0,9)
-c = sffloat(3,3)
-print(9-a)
-print(a-9)
-print(c)
-print(a/b)
-print(b**c)
-
-
-t = sffloat(3.14,3)
-print(sin(t))
-print(degrees(t))
-print(a < b)
-print(a.equivalent_to_float(1.0001))
-print(a.equivalent_to_float(1.0010))
-print(a.equivalent_to_float(0.99999))
-print(sffloat(0.9999, 4))
-print(sffloat(0.99999, 4))
-print(sin(sffloat(3.1415925,2)))
-print(sin(3.1415925))
-
+if __name__ == "__main__":
+    a = sffloat(1.0,4)
+    b = sffloat(2.0,9)
+    c = sffloat(3,3)
+    print(9-a)
+    print(a-9)
+    print(c)
+    print(a/b)
+    print(b**c)
+    
+    
+    t = sffloat(3.14,3)
+    print(sin(t))
+    print(degrees(t))
+    print(a < b)
+    print(a.equivalent_to_float(1.0001))
+    print(a.equivalent_to_float(1.0010))
+    print(a.equivalent_to_float(0.99999))
+    print(sffloat(0.9999, 4))
+    print(sffloat(0.99999, 4))
+    print(sin(sffloat(3.1415925,2)))
+    print(sin(3.1415925))
+    
 
 
