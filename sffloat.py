@@ -1,5 +1,4 @@
-from math import (log10, floor, sin, cos, tan, log, log10, asin, acos, atan,
-    atan2, degrees, radians, exp, pow, sqrt)
+import math
 import to_precision
 
 
@@ -54,7 +53,7 @@ class sffloat:
         Return the position of the most significant digit.
         0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
         """
-        return floor(log10(abs(val)))
+        return math.floor(math.log10(abs(val)))
 
     @classmethod    
     def _lsd_from_val_sf(cls, val, sigfigs):
@@ -69,7 +68,7 @@ class sffloat:
         Return the position of the most significant digit.
         0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
         """
-        return floor(log10(abs(self._val)))
+        return math.floor(math.log10(abs(self._val)))
         
     def _lsd(self):
         """
