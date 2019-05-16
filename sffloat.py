@@ -279,21 +279,30 @@ class sffloat:
         
 # Wrappers for mathematics functions
 
-def _funcwrapper(f, x):
+def _funcwrapper(f, x, y=None):
     """
     Generic wrapper for functions that support sffloat arguments
     """
     try:
-        return sffloat(f(x), x._sf)
+        return sffloat(f(x), x._sf) if y is None else sffloat(f(x, y), min(x._sf, y._sf))
     except:
-        return f(x)
-    
+        return f(x) if y is None else f(x, y)
 
-def sin(x):
-    print("here we go")
-    return _funcwrapper(sin, x)
-    
-    
+sin = lambda x: _funcwrapper(math.sin, x)    
+cos = lambda x: _funcwrapper(math.cos, x)    
+tan = lambda x: _funcwrapper(math.tan, x)    
+log = lambda x: _funcwrapper(math.log, x)    
+log10 = lambda x: _funcwrapper(math.log10, x)    
+asin = lambda x: _funcwrapper(math.asin, x)    
+acos = lambda x: _funcwrapper(math.acos, x)    
+atan = lambda x: _funcwrapper(math.atan, x)    
+atan2 = lambda x, y: _funcwrapper(math.atan2, x, y)
+exp = lambda x: _funcwrapper(math.exp, x)    
+pow = lambda x: _funcwrapper(math.pow, x)    
+sqrt = lambda x: _funcwrapper(math.sqrt, x)    
+degrees = lambda x: _funcwrapper(math.degrees, x)
+radians = lambda x: _funcwrapper(math.radians, x)
+
 
 a = sffloat(1.0,4)
 b = sffloat(2.0,9)
@@ -304,7 +313,6 @@ print(c)
 print(a/b)
 print(b**c)
 
-from math import sin, degrees
 
 t = sffloat(3.14,3)
 print(sin(t))
