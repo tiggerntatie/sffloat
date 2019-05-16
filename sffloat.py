@@ -23,6 +23,12 @@ class sffloat:
             self._sf = self.inf
         self._val = float(value)
         
+    def copy(self):
+        """
+        Return a new instance of sffloat that is a copy.
+        """
+        return sffloat(self._value, self._sf)
+    
     @classmethod
     def _sffloat_from_lsd(cls, value, lsd):
         """
@@ -182,40 +188,89 @@ class sffloat:
         """
         return self._multiplicative_func(float.__pow__, self, other, True)
 
-    
-    """
-    __mod__(self, other)
-    Implements modulo using the % operator.
-    __divmod__(self, other)
-    Implements behavior for long division using the divmod() built in function.
-    __lshift__(self, other)
-    Implements left bitwise shift using the << operator.
-    __rshift__(self, other)
-    Implements right bitwise shift using the >> operator.
-    __and__(self, other)
-    Implements bitwise and using the & operator.
-    __or__(self, other)
-    Implements bitwise or using the | operator.
-    __xor__(self, other)
-    Implements bitwise xor using the ^ operator.
-    
-    
-    __rmod__(self, other)
-    Implements reflected modulo using the % operator.
-    __rdivmod__(self, other)
-    Implements behavior for long division using the divmod() built in function, when divmod(other, self) is called.
-    __rlshift__(self, other)
-    Implements reflected left bitwise shift using the << operator.
-    __rrshift__(self, other)
-    Implements reflected right bitwise shift using the >> operator.
-    __rand__(self, other)
-    Implements reflected bitwise and using the & operator.
-    __ror__(self, other)
-    Implements reflected bitwise or using the | operator.
-    __rxor__(self, other)
-    Implements reflected bitwise xor using the ^ operator.    
-    """
+    def __eq__(self, other):
+        """
+        Implements equality operator: == 
+        Checks for matching value only.
+        """
+        return self._val == sffloat(other)._val
         
+    def __ne__(self, other):
+        """
+        Implements not equal operator: !=
+        Checks for mismatching value only.
+        """
+        return not (self == other)
+ 
+    def __cmp__(self, other):
+        """
+        Implements the comparison operation: 
+        -integer if self < other
+        0 if self == other
+        +integer if self > other
+        """
+        if self > other:
+            return 1
+        elif self < other:
+            return -1
+        else:
+            return 0
+        
+    def __lt__(self, other):
+        """
+        Implements less than operator: <
+        This compares the raw values without regard to sigfigs.
+        """
+        return self._val < sffloat(other)._val
+        
+    def __gt__(self, other):
+        """
+        Implements greater than operator: >
+        This compares the raw values without regard to sigfigs.
+        """
+        return self._val > sffloat(other)._val
+        
+    def __le__(self, other):
+        """
+        Implements less than operator: <
+        This compares the raw values without regard to sigfigs.
+        """
+        return self._val <= sffloat(other)._val
+        
+    def __ge__(self, other):
+        """
+        Implements greater than operator: >
+        This compares the raw values without regard to sigfigs.
+        """
+        return self._val >= sffloat(other)._val
+        
+    def __pos__(self):
+        """
+        Implements the unary + operator. This does nothing.
+        """
+        return self
+        
+    def __neg__(self):
+        """
+        Implements the unary - operator. Makes value negative.
+        """
+        retval = self.copy()
+        retval._val = -retval._val
+        return retval
+        
+    def __abs__(self):
+        """
+        Implements the absolute value function. 
+        """
+        retval = self.copy()
+        retval._val = abs(retval._val)
+        return retval
+        
+    
+        
+        
+    
+    
 
 a = sffloat(1.0,4)
 b = sffloat(2.0,9)
@@ -226,3 +281,9 @@ print(c)
 print(a/b)
 print(b**c)
 
+from math import sin, degrees
+
+t = sffloat(3.14,3)
+print(sin(t))
+print(degrees(t))
+print(a < b)
