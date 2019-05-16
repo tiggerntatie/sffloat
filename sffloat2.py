@@ -10,7 +10,7 @@ class sffloat(float):
         if type(val) is cls and sigfigs is None:
             return val
         else:
-            return super().__new__(cls, value)
+            return super().__new__(cls, val)
 
     def __init__(self, value, sigfigs=None):
         if sigfigs is not None and sigfigs <= 0 and sigfigs is not float('inf'):
@@ -21,6 +21,7 @@ class sffloat(float):
             self._sf = sigfigs
         else:
             self._sf = self.inf
+        super().__init__(value)
         #self._val = float(value)
         
     def copy(self):
