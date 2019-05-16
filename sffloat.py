@@ -1,4 +1,5 @@
-from math import log10, floor
+from math import (log10, floor, sin, cos, tan, log, log10, asin, acos, atan,
+    atan2, degrees, radians, exp, pow, sqrt)
 import to_precision
 
 
@@ -277,9 +278,16 @@ class sffloat:
         retval._val = abs(retval._val)
         return retval
         
-    
-        
-        
+# Wrappers for mathematics functions
+
+def sin(x):
+    """
+    Wrapper for math.sin that supports sffloat arguments
+    """
+    try:
+        return sffloat(sin(x), x._sf)
+    except:
+        return sin(x)
     
     
 
