@@ -323,7 +323,7 @@ if __name__ == "__main__":
     print(b**c)
     
     
-    t = sffloat(3.14,3)
+    t = sffloat(3.14,4)
     print(sin(t))
     print(degrees(t))
     print(a < b)
