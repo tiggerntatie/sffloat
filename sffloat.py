@@ -298,3 +298,11 @@ t = sffloat(3.14,3)
 print(sin(t))
 print(degrees(t))
 print(a < b)
+print(a.equivalent_to_float(1.0001))
+print(a.equivalent_to_float(1.0010))
+print(a.equivalent_to_float(0.99999))
+print(sffloat(0.9999, 4))
+print(sffloat(0.99999, 4))
+
+
+
