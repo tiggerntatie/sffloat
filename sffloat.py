@@ -279,14 +279,23 @@ class sffloat:
         
 # Wrappers for mathematics functions
 
-def _funcwrapper(f, x, y=None):
+def _funcwrapper(f, x):
     """
     Generic wrapper for functions that support sffloat arguments
     """
     try:
-        return sffloat(f(x), x._sf) if y is None else sffloat(f(x, y), min(x._sf, y._sf))
+        return sffloat(f(x), x._sf)
     except AttributeError:
-        return f(x) if y is None else f(x, y)
+        return f(x)
+        
+def _funcwrapper2(f, x, y):
+    """
+    Generic wrapper for functions that support sffloat arguments
+    """
+    if type(x) is not sffloat and type(y) is not sffloat:
+        return f(x, y)
+    else:
+        return sffloat(f(x, y), min(sffloat(x)._sf, sffloat(y)._sf))
 
 sin = lambda x: _funcwrapper(math.sin, x)    
 cos = lambda x: _funcwrapper(math.cos, x)    
@@ -296,7 +305,7 @@ log10 = lambda x: _funcwrapper(math.log10, x)
 asin = lambda x: _funcwrapper(math.asin, x)    
 acos = lambda x: _funcwrapper(math.acos, x)    
 atan = lambda x: _funcwrapper(math.atan, x)    
-atan2 = lambda x, y: _funcwrapper(math.atan2, x, y)
+atan2 = lambda x, y: _funcwrapper2(math.atan2, x, y)
 exp = lambda x: _funcwrapper(math.exp, x)    
 pow = lambda x: _funcwrapper(math.pow, x)    
 sqrt = lambda x: _funcwrapper(math.sqrt, x)    
@@ -325,6 +334,8 @@ if __name__ == "__main__":
     print(sffloat(0.99999, 4))
     print(sin(sffloat(3.1415925,2)))
     print(sin(3.1415925))
+    print(atan2(sffloat(3,3), 2))
+    print(atan2(3, 2))
     
 
 
