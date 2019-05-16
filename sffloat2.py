@@ -10,7 +10,7 @@ class sffloat(float):
         if type(val) is cls and sigfigs is None:
             return val
         else:
-            return super().__new__(cls)
+            return super().__new__(cls, value)
 
     def __init__(self, value, sigfigs=None):
         if sigfigs is not None and sigfigs <= 0 and sigfigs is not float('inf'):
