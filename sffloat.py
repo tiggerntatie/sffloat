@@ -285,7 +285,7 @@ def _funcwrapper(f, x, y=None):
     """
     try:
         return sffloat(f(x), x._sf) if y is None else sffloat(f(x, y), min(x._sf, y._sf))
-    except:
+    except AttributeError:
         return f(x) if y is None else f(x, y)
 
 sin = lambda x: _funcwrapper(math.sin, x)    
@@ -324,5 +324,7 @@ print(a.equivalent_to_float(0.99999))
 print(sffloat(0.9999, 4))
 print(sffloat(0.99999, 4))
 print(sin(sffloat(3.1415925,2)))
+print(sin(3.1415925))
+
 
 
