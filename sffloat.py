@@ -139,6 +139,12 @@ class SFFloat:
                 nottype = 'std'
             return round(self._val, self._sf, notation=nottype)
 
+    def __format__(self, format_spec):
+        if format_spec == "":
+            return str(self)
+        else:
+            return float(str(self)).__format__(format_spec)
+
     def __float__(self):
         return self._val
         
