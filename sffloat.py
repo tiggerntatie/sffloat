@@ -27,7 +27,7 @@ class sffloat:
         """
         Return a new instance of sffloat that is a copy.
         """
-        return sffloat(self._value, self._sf)
+        return sffloat(self._val, self._sf)
     
     def equivalent_to_float(self, other):
         """
