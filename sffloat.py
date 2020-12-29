@@ -1,8 +1,10 @@
 import math
-import to_precision
+from sigfig import round
+import warnings
+    
+warnings.simplefilter("ignore")
 
-
-class sffloat:
+class SFFloat:
     
     inf = float('inf')
 
@@ -25,9 +27,9 @@ class sffloat:
         
     def copy(self):
         """
-        Return a new instance of sffloat that is a copy.
+        Return a new instance of SFFloat that is a copy.
         """
-        return sffloat(self._val, self._sf)
+        return type(self)(self._val, self._sf)
     
     def equivalent_to_float(self, other):
         """
@@ -35,17 +37,39 @@ class sffloat:
         equivalent to self, when taking significant figures
         into account.
         
-        Ex. sffloat(3.1415926, 3).equivalent_to(3.142) --> True
+        Ex. SFFloat(3.1415926, 3).equivalent_to(3.142) --> True
         """
-        sfother = sffloat(other, self._sf)
+        sfother = type(self)(other, self._sf)
         return str(self) == str(sfother)
     
     @classmethod
     def _sffloat_from_lsd(cls, value, lsd):
         """
-        Return a new sffloat instance for a given value and lsd place
+        Return a new SFFloat instance for a given value and lsd place
         """
         return cls(value, cls._msd_from_val(value) - lsd + 1)
+
+    # Wrappers for mathematics functions
+
+    @classmethod
+    def _funcwrapper(cls, f, x):
+        """
+        Generic wrapper for functions that support SFFloat arguments
+        """
+        try:
+            return cls(f(x), x._sf)
+        except AttributeError:
+            return f(x)
+
+    @classmethod
+    def _funcwrapper2(cls, f, x, y):
+        """
+        Generic wrapper for functions that support sffloat arguments
+        """
+        if type(x) is not cls and type(y) is not cls:
+            return f(x, y)
+        else:
+            return cls(f(x, y), min(cls(x)._sf, cls(y)._sf))
 
     @staticmethod    
     def _msd_from_val(val):
@@ -102,15 +126,18 @@ class sffloat:
 
     def __repr__(self):
         if self._sf is self.inf:
-            return "sffloat({0})".format(self._val)
+            return "SFFloat({0})".format(self._val)
         else:
-            return "sffloat({0},{1})".format(self._val, self._sf)
+            return "SFFloat({0},{1})".format(self._val, self._sf)
             
     def __str__(self):
         if self._sf is self.inf:
             return str(self._val)
         else:
-            return to_precision.to_precision(self._val, self._sf)
+            nottype = 'sci'
+            if 0.001  < abs(self._val) < 1000:
+                nottype = 'std'
+            return round(self._val, self._sf, notation=nottype)
 
     def __float__(self):
         return self._val
@@ -232,28 +259,28 @@ class sffloat:
         Implements less than operator: <
         This compares the raw values without regard to sigfigs.
         """
-        return self._val < sffloat(other)._val
+        return self._val < type(self)(other)._val
         
     def __gt__(self, other):
         """
         Implements greater than operator: >
         This compares the raw values without regard to sigfigs.
         """
-        return self._val > sffloat(other)._val
+        return self._val > type(self)(other)._val
         
     def __le__(self, other):
         """
         Implements less than operator: <
         This compares the raw values without regard to sigfigs.
         """
-        return self._val <= sffloat(other)._val
+        return self._val <= type(self)(other)._val
         
     def __ge__(self, other):
         """
         Implements greater than operator: >
         This compares the raw values without regard to sigfigs.
         """
-        return self._val >= sffloat(other)._val
+        return self._val >= type(self)(other)._val
         
     def __pos__(self):
         """
@@ -277,45 +304,26 @@ class sffloat:
         retval._val = abs(retval._val)
         return retval
         
-# Wrappers for mathematics functions
 
-def _funcwrapper(f, x):
-    """
-    Generic wrapper for functions that support sffloat arguments
-    """
-    try:
-        return sffloat(f(x), x._sf)
-    except AttributeError:
-        return f(x)
-        
-def _funcwrapper2(f, x, y):
-    """
-    Generic wrapper for functions that support sffloat arguments
-    """
-    if type(x) is not sffloat and type(y) is not sffloat:
-        return f(x, y)
-    else:
-        return sffloat(f(x, y), min(sffloat(x)._sf, sffloat(y)._sf))
-
-sin = lambda x: _funcwrapper(math.sin, x)    
-cos = lambda x: _funcwrapper(math.cos, x)    
-tan = lambda x: _funcwrapper(math.tan, x)    
-log = lambda x: _funcwrapper(math.log, x)    
-log10 = lambda x: _funcwrapper(math.log10, x)    
-asin = lambda x: _funcwrapper(math.asin, x)    
-acos = lambda x: _funcwrapper(math.acos, x)    
-atan = lambda x: _funcwrapper(math.atan, x)    
-atan2 = lambda x, y: _funcwrapper2(math.atan2, x, y)
-exp = lambda x: _funcwrapper(math.exp, x)    
-pow = lambda x: _funcwrapper(math.pow, x)    
-sqrt = lambda x: _funcwrapper(math.sqrt, x)    
-degrees = lambda x: _funcwrapper(math.degrees, x)
-radians = lambda x: _funcwrapper(math.radians, x)
+sin = lambda x: SFFloat._funcwrapper(math.sin, x)    
+cos = lambda x: SFFloat._funcwrapper(math.cos, x)    
+tan = lambda x: SFFloat._funcwrapper(math.tan, x)    
+log = lambda x: SFFloat._funcwrapper(math.log, x)    
+log10 = lambda x: SFFloat._funcwrapper(math.log10, x)    
+asin = lambda x: SFFloat._funcwrapper(math.asin, x)    
+acos = lambda x: SFFloat._funcwrapper(math.acos, x)    
+atan = lambda x: SFFloat._funcwrapper(math.atan, x)    
+atan2 = lambda x, y: SFFloat._funcwrapper2(math.atan2, x, y)
+exp = lambda x: SFFloat._funcwrapper(math.exp, x)    
+pow = lambda x: SFFloat._funcwrapper(math.pow, x)    
+sqrt = lambda x: SFFloat._funcwrapper(math.sqrt, x)    
+degrees = lambda x: SFFloat._funcwrapper(math.degrees, x)
+radians = lambda x: SFFloat._funcwrapper(math.radians, x)
 
 if __name__ == "__main__":
-    a = sffloat(1.0,4)
-    b = sffloat(2.0,9)
-    c = sffloat(3,3)
+    a = SFFloat(1.0,4)
+    b = SFFloat(2.0,9)
+    c = SFFloat(3,3)
     print(9-a)
     print(a-9)
     print(c)
@@ -323,18 +331,18 @@ if __name__ == "__main__":
     print(b**c)
     
     
-    t = sffloat(3.14,4)
+    t = SFFloat(3.14,4)
     print(sin(t))
     print(degrees(t))
     print(a < b)
     print(a.equivalent_to_float(1.0001))
     print(a.equivalent_to_float(1.0010))
     print(a.equivalent_to_float(0.99999))
-    print(sffloat(0.9999, 4))
-    print(sffloat(0.99999, 4))
-    print(sin(sffloat(3.1415925,2)))
+    print(SFFloat(0.9999, 4))
+    print(SFFloat(0.99999, 4))
+    print(sin(SFFloat(3.1415925,2)))
     print(sin(3.1415925))
-    print(atan2(sffloat(3,3), 2))
+    print(atan2(SFFloat(3,3), 2))
     print(atan2(3, 2))
     
 
