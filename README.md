@@ -1,7 +1,7 @@
 ![Python package](https://github.com/tiggerntatie/sffloat/workflows/sffloat%20test%20suite/badge.svg)
 
 # sffloat
-___
+
 The **sffloat** package defines a `SFFloat` class that allows easy floating point computations
 that take precision or "significant figures" into account.
 
