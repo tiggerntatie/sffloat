@@ -63,6 +63,17 @@ The sine of 0.785 is 0.707; its raw value is 0.7071067811865475
 ```
 
 ## supported functions
+If you want to use one of the standard Python math functions while preserving precision then
+use any of the following replacement functions. You can either import and use as-is, or import
+and assign the standard function name:
+```python
+from sffloat import sfsin
+```
+or
+```python
+from sffloat import sfsin as sin
+```
+
 * sfsin replaces sin
 * sfcos replaces cos
 * sftan replaces tan
