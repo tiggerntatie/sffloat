@@ -1,4 +1,4 @@
-![Python package](https://github.com/tiggerntatie/sffloat/workflows/Python%20package/badge.svg)
+![Python package](https://github.com/tiggerntatie/sffloat/workflows/sffloat%20test%20suite/badge.svg)
 
 # sffloat
 ___
