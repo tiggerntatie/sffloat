@@ -11,6 +11,9 @@ class TestClassMethods(unittest.TestCase):
         b = SFFloat(1,1)
         self.assertEqual(b.__repr__(), 'SFFloat(1.0,1)')
         self.assertEqual(str(b), '1')
+        c = SFFloat(1.234, lsd=-1)
+        self.assertEqual(c.__repr__(), 'SFFloat(1.234,2)')
+        self.assertEqual(str(c), '1.2')
 
     def test_copy(self):
         # copy method

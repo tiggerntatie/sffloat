@@ -18,31 +18,56 @@ class SFFloat:
     Arithmetic operations performed with the :class: `SFFloat` types track and maintain
     the correct number of significant figures and will display the proper rounded value
     when printing or converting to string.
-    """
+
+    :Required Arguments:
+        * **val** [float or str] The numeric value of the new instance.
+
+    :Optional Arguments:
+        * **sigfigs** [int] The number of significant digits of the new instance.
+            This argument should be used in order to use the :class:`SFFloat`
+            significant figures tracking. If this argument is omitted, or if the
+            argument is set equal to `float('inf')` then the resulting
+            :class:`SFFloat` instance will have unlimited significant digits.
+
+    :Optional Keyword Arguments:
+        * **lsd** [int] The place of the least significant digit in the value. The
+            ones place corresponds to zero, with increasing negative values indicating
+            digits to the right of the ones place and increasing positive values
+            indicating digits to the left of the ones place. Note that the **sigfigs**
+            argument and the **lsd** argument may not be used at the same time."""
 
     inf = float("inf")
 
-    def __new__(cls, val, sigfigs=None):
+    def __new__(cls, val, sigfigs=None, **_):
         if isinstance(val, cls) and sigfigs is None:
             return val
         return super().__new__(cls)
 
-    def __init__(self, value, sigfigs=None):
-        if sigfigs is not None and sigfigs <= 0 and sigfigs is not float("inf"):
+    def __init__(self, value, sigfigs=None, **kwargs):
+        if sigfigs and not isinstance(sigfigs, int) and not sigfigs is float("inf"):
             raise ValueError("Invalid value for sigfigs.")
         if sigfigs is None and self is value:
             return  # just passthru
-        if sigfigs is not None:
-            self._sf = sigfigs
-        else:
+        self._lsd = kwargs.get("lsd", None)
+        if self._lsd is not None and sigfigs is not None:
+            raise ValueError("Can not specify both lsd and sigfigs.")
+        # passing value only - infinite sigfigs
+        if self._lsd is None and sigfigs is None:
             self._sf = self.inf
+        # passing lsd value, set _sf to None
+        elif self._lsd is not None:
+            self._sf = None
+        # sigfigs must be set - figure out lsd
+        else:
+            self._sf = None
+            self._lsd = self._msd_from_val(value) - (sigfigs - 1)
         self._val = float(value)
 
     def copy(self):
         """
         Return a new instance of SFFloat that is a copy.
         """
-        return type(self)(self._val, self._sf)
+        return type(self)(self._val, lsd=self._lsd)
 
     def equivalent_to_float(self, other):
         """
@@ -52,7 +77,7 @@ class SFFloat:
 
         Ex. SFFloat(3.1415926, 3).equivalent_to(3.142) --> True
         """
-        sfother = type(self)(other, self._sf)
+        sfother = type(self)(other, self.sigfigs)
         return str(self) == str(sfother)
 
     @property
@@ -60,7 +85,9 @@ class SFFloat:
         """
         Return the number of significant figures for this value
         """
-        return self._sf
+        if self._sf is self.inf:
+            return self._sf
+        return self._msd_from_val(self._val) - self._lsd + 1
 
     @property
     def value(self):
@@ -69,12 +96,13 @@ class SFFloat:
         """
         return self._val
 
-    @classmethod
-    def _sffloat_from_lsd(cls, value, lsd):
+    @property
+    def lsd(self):
         """
-        Return a new SFFloat instance for a given value and lsd place
+        Return the position of the least significant digit.
+        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
         """
-        return cls(value, cls._msd_from_val(value) - lsd + 1)
+        return self._lsd
 
     # Wrappers for mathematics functions
 
@@ -103,15 +131,9 @@ class SFFloat:
         Return the position of the most significant digit.
         0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
         """
+        if not val:
+            return 0
         return math.floor(math.log10(abs(val)))
-
-    @classmethod
-    def _lsd_from_val_sf(cls, val, sigfigs):
-        """
-        Return the position of the least significant digit.
-        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
-        """
-        return cls._msd_from_val(val) - (sigfigs - 1)
 
     def _msd(self):
         """
@@ -120,48 +142,48 @@ class SFFloat:
         """
         return math.floor(math.log10(abs(self._val)))
 
-    def lsd(self):
-        """
-        Return the position of the least significant digit.
-        0 means 1's place, 1 means 10's place, -1 means 0.1's place, etc.
-        """
-        return self._msd() - (self._sf - 1)
-
     @classmethod
-    def _multiplicative_func(cls, func, arg1, arg2, ref=False):
+    def _multiplicative_func(cls, func, arg1, arg2):
         """
         Perform method func on its object arg1, and other arg2.
         """
         sfother = cls(arg2)
-        if ref:
-            return cls(
-                func(sfother.value, arg1.value), min(arg1.sigfigs, sfother.sigfigs)
+        minsigfig = min(arg1.sigfigs, sfother.sigfigs)
+        if minsigfig <= 0:
+            raise ValueError(
+                f"Precision of {func} with zero sigfig operand is undefined."
             )
-        return cls(func(arg1.value, sfother.value), min(arg1.sigfigs, sfother.sigfigs))
+        return cls(func(arg1.value, sfother.value), minsigfig)
 
     @classmethod
-    def _additive_func(cls, func, arg1, arg2, ref=False):
+    def _additive_func(cls, func, arg1, arg2):
         """
         Perform method func on its object arg1, and other arg2.
         """
         sfother = cls(arg2)
-        lsd = max(arg1.lsd(), sfother.lsd())
-        if ref:
-            return cls._sffloat_from_lsd(func(sfother.value, arg1.value), lsd)
-        return cls._sffloat_from_lsd(func(arg1.value, sfother.value), lsd)
+        if arg1.sigfigs is cls.inf:
+            lsd = sfother.lsd
+        elif sfother.sigfigs is cls.inf:
+            lsd = arg1.lsd
+        else:
+            lsd = max(arg1.lsd, sfother.lsd)
+        return cls(func(arg1.value, sfother.value), lsd=lsd)
 
     def __repr__(self):
         if self._sf is self.inf:
             return f"{type(self).__name__}({self._val})"
-        return f"{type(self).__name__}({self._val},{self._sf})"
+        return f"{type(self).__name__}({self._val},{self.sigfigs})"
 
     def __str__(self):
         if self._sf is self.inf:
             return str(self._val)
+        sigfigs = self.sigfigs
+        if sigfigs <= 0:
+            return "0"
         nottype = "sci"
-        if 0.001 < abs(self._val) < 1000:
+        if 0.001 < abs(self._val) < 1000 or self._val == 0.0:
             nottype = "std"
-        return sigfig.round(self._val, self._sf, notation=nottype)
+        return sigfig.round(self._val, self.sigfigs, notation=nottype)
 
     def __format__(self, format_spec):
         if format_spec == "":
@@ -193,7 +215,7 @@ class SFFloat:
         """
         Implements reflected subtraction.
         """
-        return self._additive_func(float.__sub__, self, other, ref=True)
+        return self._additive_func(float.__rsub__, self, other)
 
     def __mul__(self, other):
         """
@@ -205,19 +227,7 @@ class SFFloat:
         """
         Implements reflected multiplication.
         """
-        return self._multiplicative_func(float.__mul__, self, other, ref=True)
-
-    def __floordiv__(self, other):
-        """
-        Implements integer division using the // operator.
-        """
-        return self._multiplicative_func(float.__floordiv__, self, other)
-
-    def __rfloordiv__(self, other):
-        """
-        Implements reflected integer division using the // operator.
-        """
-        return self._multiplicative_func(float.__floordiv__, self, other, ref=True)
+        return self._multiplicative_func(float.__rmul__, self, other)
 
     def __truediv__(self, other):
         """
@@ -229,7 +239,7 @@ class SFFloat:
         """
         Implements reflected true division.
         """
-        return self._multiplicative_func(float.__rtruediv__, self, other, ref=True)
+        return self._multiplicative_func(float.__rtruediv__, self, other)
 
     def __pow__(self, other):
         """
@@ -241,7 +251,7 @@ class SFFloat:
         """
         Implements behavior for reflected exponents using the ** operator.
         """
-        return self._multiplicative_func(float.__pow__, self, other, True)
+        return self._multiplicative_func(float.__rpow__, self, other)
 
     def __eq__(self, other):
         """
@@ -249,7 +259,7 @@ class SFFloat:
         Checks for matching value and sigfigs.
         """
         other = SFFloat(other)
-        return self._val == other.value and self._sf == other.sigfigs
+        return self._val == other.value and self.sigfigs == other.sigfigs
 
     def __ne__(self, other):
         """
@@ -257,7 +267,7 @@ class SFFloat:
         Checks for mismatching value or sigfig.
         """
         other = SFFloat(other)
-        return self._val != other.value or self._sf != other.sigfigs
+        return self._val != other.value or self.sigfigs != other.sigfigs
 
     def __cmp__(self, other):
         """
@@ -333,31 +343,7 @@ sfacos = lambda x: SFFloat.funcwrapper(math.acos, x)
 sfatan = lambda x: SFFloat.funcwrapper(math.atan, x)
 sfatan2 = lambda x, y: SFFloat.funcwrapper2(math.atan2, x, y)
 sfexp = lambda x: SFFloat.funcwrapper(math.exp, x)
-sfpow = lambda x: SFFloat.funcwrapper(math.pow, x)
+sfpow = lambda x, y: SFFloat.funcwrapper2(math.pow, x, y)
 sfsqrt = lambda x: SFFloat.funcwrapper(math.sqrt, x)
 sfdegrees = lambda x: SFFloat.funcwrapper(math.degrees, x)
 sfradians = lambda x: SFFloat.funcwrapper(math.radians, x)
-
-if __name__ == "__main__":
-    a = SFFloat(1.0, 4)
-    b = SFFloat(2.0, 9)
-    c = SFFloat(3, 3)
-    print(9 - a)
-    print(a - 9)
-    print(c)
-    print(a / b)
-    print(b ** c)
-
-    t = SFFloat(3.14, 4)
-    print(sfsin(t))
-    print(sfdegrees(t))
-    print(a < b)
-    print(a.equivalent_to_float(1.0001))
-    print(a.equivalent_to_float(1.0010))
-    print(a.equivalent_to_float(0.99999))
-    print(SFFloat(0.9999, 4))
-    print(SFFloat(0.99999, 4))
-    print(sfsin(SFFloat(3.1415925, 2)))
-    print(sfsin(3.1415925))
-    print(sfatan2(SFFloat(3, 3), 2))
-    print(sfatan2(3, 2))
