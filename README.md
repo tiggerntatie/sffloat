@@ -121,10 +121,10 @@ pip install sffloat
 ## development environment
 To begin working with `sffloat` in a development environment:
 
-* Clone this repository and cd into it.
-* Create a virtual environment: python3 -m venv ./env
-* Activate the virtual environment: source ./env/bin/activate
-* Install the dependencies: pip install -r requirements.txt
+* Clone this repository and `cd` into it.
+* Create a virtual environment: `python3 -m venv ./env`
+* Activate the virtual environment: `source ./env/bin/activate`
+* Install the dependencies: `pip install -r requirements.txt`
 
 The `./scripts` folder includes a `run_tests.sh` script that will:
 * Perform a style check using black.
