@@ -22,6 +22,7 @@ from sffloat import SFFloat
 ### calculating circle area using an imprecise radius
 ```python
 # Create a floating point radius value of 3.4 with 2 sig figs
+from math import pi
 radius = SFFloat(3.4, 2)
 
 # Compute the circle area, with sig figs
@@ -90,6 +91,8 @@ from sffloat import sfsin as sin
 * sfradians replaces radians
 
 ## notes on functionality
+* Operation with standard functions is not sophisticated and follows the same rules that are used for
+  ordinary multiplication (minimum significant figures propagate as-is).
 * When ordinary floating point numbers are used with `SFFloat` values, the floating point values are
   considered to have unlimited precision.
 * Addition or subtraction operations on `SFFloat` values may result in "zero" or "negative" significant

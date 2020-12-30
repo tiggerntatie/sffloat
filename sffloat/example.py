@@ -23,3 +23,8 @@ print(a + 0.12345678)  # prints 0.12469
 
 # Use with wrapped math functions (note the sfsin import above!)
 print(sin(SFFloat(pi / 4, 3)))  # prints 0.707
+
+
+angle = SFFloat(pi / 4, 3)
+print(f"The angle is {angle} radians; its raw value is {angle.value} radians")
+print(f"The sine of {angle} is {sin(angle)}; its raw value is {sin(angle).value}")
