@@ -28,7 +28,7 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         cd sffloat
-        rm dist/*
+        rm -f dist/*
         python setup.py sdist
         python -m pip wheel --no-index --no-deps --wheel-dir dist dist/*.tar.gz
         python -m twine upload dist/*
