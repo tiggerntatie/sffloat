@@ -1,4 +1,4 @@
-![build status](https://github.com/tiggerntatie/sffloat/blob/master/.github/workflows/python-package.yml/badge.svg)
+![build status](https://github.com/tiggerntatie/sffloat/workflows/sffloat%20test%20suite/badge.svg)
 
 # sffloat
 
