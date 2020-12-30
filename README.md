@@ -1,3 +1,5 @@
+![build status](https://github.com/tiggerntatie/sffloat/blob/master/.github/workflows/python-package.yml/badge.svg)
+
 # sffloat
 
 The **sffloat** package defines a `SFFloat` class that allows easy floating point computations
