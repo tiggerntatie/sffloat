@@ -1,6 +1,7 @@
 """
 sffloat package defines names that may be imported directly
 """
+
 from .__version__ import VERSION
 from .sffloat import (
     SFFloat,
