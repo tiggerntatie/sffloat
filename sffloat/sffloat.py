@@ -333,17 +333,99 @@ class SFFloat:
         return retval
 
 
-sfsin = lambda x: SFFloat.funcwrapper(math.sin, x)
-sfcos = lambda x: SFFloat.funcwrapper(math.cos, x)
-sftan = lambda x: SFFloat.funcwrapper(math.tan, x)
-sflog = lambda x: SFFloat.funcwrapper(math.log, x)
-sflog10 = lambda x: SFFloat.funcwrapper(math.log10, x)
-sfasin = lambda x: SFFloat.funcwrapper(math.asin, x)
-sfacos = lambda x: SFFloat.funcwrapper(math.acos, x)
-sfatan = lambda x: SFFloat.funcwrapper(math.atan, x)
-sfatan2 = lambda x, y: SFFloat.funcwrapper2(math.atan2, x, y)
-sfexp = lambda x: SFFloat.funcwrapper(math.exp, x)
-sfpow = lambda x, y: SFFloat.funcwrapper2(math.pow, x, y)
-sfsqrt = lambda x: SFFloat.funcwrapper(math.sqrt, x)
-sfdegrees = lambda x: SFFloat.funcwrapper(math.degrees, x)
-sfradians = lambda x: SFFloat.funcwrapper(math.radians, x)
+def sfsin(x):
+    """
+    Implements a sig-fig aware replacement for the standard sin function.
+    """
+    return SFFloat.funcwrapper(math.sin, x)
+
+
+def sfcos(x):
+    """
+    Implements a sig-fig aware replacement for the standard cos function.
+    """
+    return SFFloat.funcwrapper(math.cos, x)
+
+
+def sftan(x):
+    """
+    Implements a sig-fig aware replacement for the standard tan function.
+    """
+    return SFFloat.funcwrapper(math.tan, x)
+
+
+def sflog(x):
+    """
+    Implements a sig-fig aware replacement for the standard log function.
+    """
+    return SFFloat.funcwrapper(math.log, x)
+
+
+def sflog10(x):
+    """
+    Implements a sig-fig aware replacement for the standard log10 function.
+    """
+    return SFFloat.funcwrapper(math.log10, x)
+
+
+def sfasin(x):
+    """
+    Implements a sig-fig aware replacement for the standard asin function.
+    """
+    return SFFloat.funcwrapper(math.asin, x)
+
+
+def sfacos(x):
+    """
+    Implements a sig-fig aware replacement for the standard acos function.
+    """
+    return SFFloat.funcwrapper(math.acos, x)
+
+
+def sfatan(x):
+    """
+    Implements a sig-fig aware replacement for the standard atan function.
+    """
+    return SFFloat.funcwrapper(math.atan, x)
+
+
+def sfatan2(x, y):
+    """
+    Implements a sig-fig aware replacement for the standard atan2 function.
+    """
+    return SFFloat.funcwrapper2(math.atan2, x, y)
+
+
+def sfexp(x):
+    """
+    Implements a sig-fig aware replacement for the standard exp function.
+    """
+    return SFFloat.funcwrapper(math.exp, x)
+
+
+def sfpow(x, y):
+    """
+    Implements a sig-fig aware replacement for the standard pow function.
+    """
+    return SFFloat.funcwrapper2(math.pow, x, y)
+
+
+def sfsqrt(x):
+    """
+    Implements a sig-fig aware replacement for the standard sqrt function.
+    """
+    return SFFloat.funcwrapper(math.sqrt, x)
+
+
+def sfdegrees(x):
+    """
+    Implements a sig-fig aware replacement for the standard degrees function.
+    """
+    return SFFloat.funcwrapper(math.degrees, x)
+
+
+def sfradians(x):
+    """
+    Implements a sig-fig aware replacement for the standard radians function.
+    """
+    return SFFloat.funcwrapper(math.radians, x)
