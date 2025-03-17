@@ -2,6 +2,7 @@ import unittest
 import os
 import sys
 from io import StringIO
+from sffloat import SFFloat
 
 
 class TestReadme(unittest.TestCase):
