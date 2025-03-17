@@ -62,7 +62,7 @@ print(f"The sine of {angle} is {sin(angle)}; its raw value is {sin(angle).value}
 ```
 ```
 The angle is 0.785; its raw value is 0.7853981633974483
-The sine of 0.785 is 0.707; its raw value is 0.7071067811865476
+The sine of 0.785 is 0.707; its raw value is 0.7071067811865475
 ```
 
 ## supported functions
